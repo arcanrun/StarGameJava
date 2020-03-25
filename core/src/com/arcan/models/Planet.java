@@ -10,17 +10,14 @@ public class Planet {
     private Texture spaceShip;
 
     private Vector2 position;
-    //    private Vector2 dest;
-    int mouseX;
-    int mouseY;
+    private Vector2 dest;
 
 
     public Planet(SpriteBatch batch) {
         spaceShip = new Texture("saturn.png");
         position = new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-//        dest  = new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-        mouseX = Gdx.graphics.getWidth() / 2;
-        mouseY = Gdx.graphics.getHeight() / 2;
+        dest = new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+
 
     }
 
@@ -31,21 +28,23 @@ public class Planet {
 
     public void update(float dt) {
         if (Gdx.input.isTouched()) {
-            mouseX = Gdx.input.getX();
-            mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
+            dest.x = Gdx.input.getX();
+            dest.y = Gdx.graphics.getHeight() - Gdx.input.getY();
         }
 
 
-        float pathX = mouseX - position.x;
-        float pathY = mouseY - position.y;
+        float pathX = dest.x - position.x;
+        float pathY = dest.y - position.y;
 
         float distance = (float) Math.sqrt(pathX * pathX + pathY * pathY);
         float directionX = pathX / distance;
         float directionY = pathY / distance;
 
-        if ((int)position.x != (int)mouseX & position.y != (int)mouseY){
-            position.x += directionX * 200f * dt;
-            position.y += directionY * 200f * dt;
+        if ((int)position.x != (int)dest.x & (int)position.y != (int)dest.y){
+            position.x += directionX * 300f * dt;
+            position.y += directionY * 300f * dt;
+
+
         }
 
 
