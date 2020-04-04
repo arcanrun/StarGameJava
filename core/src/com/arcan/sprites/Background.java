@@ -1,12 +1,11 @@
-package ru.geekbrains.sprites;
+package com.arcan.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import com.arcan.base.Sprite;
 import com.arcan.exception.GameException;
 import com.arcan.math.Rect;
-import com.arcan.base.Sprite;
 
 public class Background extends Sprite {
 
