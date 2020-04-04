@@ -23,6 +23,8 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     private Vector2 touch;
 
+
+
     @Override
     public void show() {
         System.out.println("show");
@@ -41,6 +43,9 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     }
 
+    public Rect getWorldBounds(){
+        return worldBounds;
+    }
     @Override
     public void resize(int width, int height) {
         System.out.println("resize width = " + width + " height = " + height);
