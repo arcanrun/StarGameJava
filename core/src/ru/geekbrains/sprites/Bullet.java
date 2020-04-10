@@ -1,7 +1,6 @@
 package ru.geekbrains.sprites;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.base.Sprite;
@@ -12,16 +11,14 @@ public class Bullet extends Sprite {
     private Rect worldBounds;
     private final Vector2 v = new Vector2();
     private int damage;
-    private Object owner;
-
+    private Sprite owner;
 
     public Bullet() {
         regions = new TextureRegion[1];
-
     }
 
     public void set(
-            Object owner,
+            Sprite owner,
             TextureRegion region,
             Vector2 pos0,
             Vector2 v0,
@@ -36,10 +33,7 @@ public class Bullet extends Sprite {
        setHeightProportion(height);
        this.worldBounds = worldBounds;
        this.damage = damage;
-
     }
-
-
 
     @Override
     public void update(float delta) {
@@ -47,7 +41,6 @@ public class Bullet extends Sprite {
         if (isOutside(worldBounds)) {
             destroy();
         }
-
     }
 
     public int getDamage() {

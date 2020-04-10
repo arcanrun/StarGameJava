@@ -37,7 +37,7 @@ public class EnemyEmitter {
     private Sound shootSound;
     private TextureRegion bulletRegion;
 
-    private float generateInterval = 4f;
+    private float generateInterval = 2f;
     private float generateTimer;
 
     private final TextureRegion[] enemySmallRegion;
@@ -72,7 +72,7 @@ public class EnemyEmitter {
             generateTimer = 0f;
             Enemy enemy = enemyPool.obtain();
             float type = (float) Math.random();
-            if (type < 0.6f) {
+            if (type < 0.5f) {
                 enemy.set(
                         enemySmallRegion,
                         enemySmallV,
@@ -85,7 +85,7 @@ public class EnemyEmitter {
                         ENEMY_SMALL_HP,
                         ENEMY_SMALL_HEIGHT
                 );
-            } else if (type < 0.85f) {
+            } else if (type < 0.8f) {
                 enemy.set(
                         enemyMediumRegion,
                         enemyMediumV,
