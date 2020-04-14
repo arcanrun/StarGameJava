@@ -24,6 +24,9 @@ public class Enemy extends Ship {
         descentV = new Vector2(0, -0.3f);
     }
 
+    public Vector2 getPos(){
+        return pos;
+    }
     @Override
     public void update(float delta) {
         super.update(delta);

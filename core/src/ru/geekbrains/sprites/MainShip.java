@@ -13,7 +13,7 @@ import ru.geekbrains.pool.ExplosionPool;
 
 public class MainShip extends Ship {
 
-    private static final int HP = 10;
+    private static final int HP = 100;
     private static final float SHIP_HEIGHT = 0.15f;
     private static final float BOTTOM_MARGIN = 0.05f;
     private static final int INVALID_POINTER = -1;
@@ -23,6 +23,7 @@ public class MainShip extends Ship {
 
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
+    private  int score;
 
     public MainShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, Sound shootSound) throws GameException {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
@@ -34,11 +35,34 @@ public class MainShip extends Ship {
         bulletPos = new Vector2();
         v0 = new Vector2(0.5f, 0);
         v = new Vector2();
-        reloadInterval = 0.2f;
+        reloadInterval = 1.2f;
         reloadTimer = reloadInterval;
         bulletHeight = 0.01f;
         damage = 1;
         hp = HP;
+    }
+
+    public void setScore(int value){
+        score = value;
+    }
+
+    public void incScore(){
+        score++;
+    }
+
+    public int getScore(){
+        return score;
+    }
+    public void startNewGame(Rect worldBounds) {
+        flushDestroy();
+        hp = HP;
+        pressedLeft = false;
+        pressedRight = false;
+        leftPointer = INVALID_POINTER;
+        rightPointer = INVALID_POINTER;
+        stop();
+        pos.x = worldBounds.pos.x;
+        reloadInterval = 1.2f;
     }
 
     @Override
@@ -146,6 +170,30 @@ public class MainShip extends Ship {
                 || bullet.getLeft() > getRight()
                 || bullet.getBottom() > pos.y
                 || bullet.getTop() < getBottom());
+    }
+
+    public void takeBonus(Bonus bonus) {
+        switch (bonus.getBonusType()) {
+            case HP:
+                hp += bonus.getBonusValue();
+                if(hp >= 100){
+                    hp = 100;
+                    score += bonus.getBonusValue();
+
+                }
+                break;
+            case AMMO:
+                reloadInterval -=0.1;
+                if(reloadInterval <= 0.05f){
+                    reloadInterval = 0.05f;
+                    score += bonus.getBonusValue();
+                }
+                break;
+            case SCORE:
+                score += bonus.getBonusValue();
+                break;
+
+        }
     }
 
     private void moveRight() {

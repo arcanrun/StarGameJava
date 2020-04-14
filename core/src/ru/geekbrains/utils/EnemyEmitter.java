@@ -16,7 +16,7 @@ public class EnemyEmitter {
     private static final float ENEMY_SMALL_BULLET_HEIGHT = 0.01f;
     private static final float ENEMY_SMALL_BULLET_VY = -0.3f;
     private static final int ENEMY_SMALL_DAMAGE = 1;
-    private static final float ENEMY_SMALL_RELOAD_INTERVAL = 3f;
+    private static final float ENEMY_SMALL_RELOAD_INTERVAL = 1f;
     private static final int ENEMY_SMALL_HP = 1;
 
     private static final float ENEMY_MEDIUM_HEIGHT = 0.15f;
@@ -30,7 +30,7 @@ public class EnemyEmitter {
     private static final float ENEMY_BIG_BULLET_HEIGHT = 0.04f;
     private static final float ENEMY_BIG_BULLET_VY = -0.3f;
     private static final int ENEMY_BIG_DAMAGE = 10;
-    private static final float ENEMY_BIG_RELOAD_INTERVAL = 1f;
+    private static final float ENEMY_BIG_RELOAD_INTERVAL = 3f;
     private static final int ENEMY_BIG_HP = 10;
 
     private Rect worldBounds;
@@ -50,6 +50,8 @@ public class EnemyEmitter {
 
     private final EnemyPool enemyPool;
 
+    private int level = 1;
+
     public EnemyEmitter(TextureAtlas atlas, EnemyPool enemyPool, Rect worldBounds, Sound shootSound) {
         this.worldBounds = worldBounds;
         this.shootSound = shootSound;
@@ -66,7 +68,11 @@ public class EnemyEmitter {
         this.enemyBigV = new Vector2(0, -0.005f);
     }
 
-    public void generate(float delta) {
+    public void generate(float delta, int frags) {
+        level = frags / 1000 == 0 ? 1 : frags / 1000;
+        generateInterval = 2f / (float) (level * 0.5);
+        System.out.println(generateInterval);
+
         generateTimer += delta;
         if (generateTimer >= generateInterval) {
             generateTimer = 0f;
@@ -79,7 +85,7 @@ public class EnemyEmitter {
                         bulletRegion,
                         ENEMY_SMALL_BULLET_HEIGHT,
                         ENEMY_SMALL_BULLET_VY,
-                        ENEMY_SMALL_DAMAGE,
+                        ENEMY_SMALL_DAMAGE * level,
                         ENEMY_SMALL_RELOAD_INTERVAL,
                         shootSound,
                         ENEMY_SMALL_HP,
@@ -92,7 +98,7 @@ public class EnemyEmitter {
                         bulletRegion,
                         ENEMY_MEDIUM_BULLET_HEIGHT,
                         ENEMY_MEDIUM_BULLET_VY,
-                        ENEMY_MEDIUM_DAMAGE,
+                        ENEMY_MEDIUM_DAMAGE * level,
                         ENEMY_MEDIUM_RELOAD_INTERVAL,
                         shootSound,
                         ENEMY_MEDIUM_HP,
@@ -105,7 +111,7 @@ public class EnemyEmitter {
                         bulletRegion,
                         ENEMY_BIG_BULLET_HEIGHT,
                         ENEMY_BIG_BULLET_VY,
-                        ENEMY_BIG_DAMAGE,
+                        ENEMY_BIG_DAMAGE * level,
                         ENEMY_BIG_RELOAD_INTERVAL,
                         shootSound,
                         ENEMY_BIG_HP,
@@ -115,5 +121,9 @@ public class EnemyEmitter {
             enemy.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemy.getHalfWidth(), worldBounds.getRight() - enemy.getHalfWidth());
             enemy.setBottom(worldBounds.getTop());
         }
+    }
+
+    public int getLevel() {
+        return level;
     }
 }
