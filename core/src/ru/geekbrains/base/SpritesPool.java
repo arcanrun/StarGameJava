@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.geekbrains.exception.GameException;
+
 public abstract class SpritesPool<T extends Sprite> {
 
     protected final List<T> activeObjects = new ArrayList<>();
@@ -59,6 +61,11 @@ public abstract class SpritesPool<T extends Sprite> {
     public void dispose() {
         activeObjects.clear();
         freeObjects.clear();
+    }
+
+    public void freeAllActiveObjects() {
+        freeObjects.addAll(activeObjects);
+        activeObjects.clear();
     }
 
     private void free(T object) {

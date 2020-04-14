@@ -2,52 +2,42 @@ package ru.geekbrains.sprites;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.base.Ship;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.pool.BulletPool;
+import ru.geekbrains.pool.ExplosionPool;
 
 public class Enemy extends Ship {
-    private static final Vector2 WARP_SPEED = new Vector2(0, -0.5f);
-    private Circle hitArea;
 
-    public Enemy(BulletPool bulletPool, Rect worldBounds) {
+    private final Vector2 descentV;
 
+    public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds) {
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
         this.worldBounds = worldBounds;
         v = new Vector2();
         v0 = new Vector2();
         bulletV = new Vector2();
-        hitArea = new Circle();
-
-
-    }
-    public void takeDamage(int amount){
-        hp -= amount;
-        if(hp<=0) destroy();
+        bulletPos = new Vector2();
+        descentV = new Vector2(0, -0.3f);
     }
 
-
-    public Circle getHitArea() {
-        return hitArea;
+    public Vector2 getPos(){
+        return pos;
     }
-
     @Override
     public void update(float delta) {
-        pos.mulAdd(v, delta);
-        if (worldBounds.getTop() - getTop() > 0) {
+        super.update(delta);
+        bulletPos.set(pos.x, pos.y - getHalfHeight());
+        if (getTop() <= worldBounds.getTop()) {
             v.set(v0);
-            if (reloadTimer >= reloadInterval) {
-                reloadTimer = 0f;
-                shoot();
-            }
-            reloadTimer += delta;
+            autoShoot(delta);
         }
-
-        hitArea.setPosition(pos);
+        if (getBottom() <= worldBounds.getBottom()) {
+            destroy();
+        }
     }
 
     public void set(
@@ -72,9 +62,14 @@ public class Enemy extends Ship {
         this.reloadTimer = reloadInterval;
         this.shootSound = shootSound;
         this.hp = hp;
-        this.v.set(WARP_SPEED);
+        this.v.set(descentV);
         setHeightProportion(height);
-        hitArea.setPosition(pos);
-        hitArea.setRadius(getHalfWidth());
+    }
+
+    public boolean isBulletCollision(Rect bullet) {
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > getTop()
+                || bullet.getTop() < pos.y);
     }
 }
